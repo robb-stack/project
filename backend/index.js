@@ -11,6 +11,9 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/user', userRoute);
+app.get('/', (req, res) => {
+    res.send("The server is working properly");
+})
 
 app.listen(PORT, () => {
     console.log("Listening to port 8000");
