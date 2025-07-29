@@ -2,7 +2,7 @@ import React from "react";
 
 const testimonialData = [
   {
-    name: "Dilshad",
+    name: "Divesh",
     image: "",
     description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
     aosDelay: "0",
@@ -14,7 +14,7 @@ const testimonialData = [
     aosDelay: "300",
   },
   {
-    name: "Sabir",
+    name: "Sabin",
     image: "",
     description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
     aosDelay: "1000",

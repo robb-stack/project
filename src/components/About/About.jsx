@@ -22,12 +22,10 @@ const About = () => {
                 About us
               </h1>
               <p data-aos="fade-up" className="leading-8 tracking-wide">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Aspernatur, magnam! Tenetur odio quo et maxime?
+                We're not just about renting cars — we're about making your journey easy and enjoyable.
               </p>
               <p data-aos="fade-up">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi,
-                tempora.
+                At Effortless Car Rental, we take the stress out of travel with simple booking, quality vehicles, and service that actually cares. Your ride, your way — no hidden fees, no headaches.
               </p>
               <button data-aos="fade-up" className="button-outline">
                 Get Started
