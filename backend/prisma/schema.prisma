@@ -19,6 +19,7 @@ model User {
   email     String    @unique
   password  String
   bookings  Booking[] 
+  activities UserActivity[]
 }
 
 model Vehicle {
@@ -26,6 +27,7 @@ model Vehicle {
   name      String
   rate      Float
   status    String     
+  image     String?
   bookings  Booking[]  
 }
 
@@ -33,9 +35,17 @@ model Booking {
   id         Int     @id @default(autoincrement())
   userId     Int
   vehicleId  Int
-
+  status    String
   user       User    @relation(fields: [userId], references: [id])
   vehicle    Vehicle @relation(fields: [vehicleId], references: [id])
 
   @@unique([userId, vehicleId]) 
 }
+
+model UserActivity {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  accessedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
