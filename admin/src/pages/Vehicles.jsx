@@ -88,7 +88,7 @@ const Vehicles = () => {
                     )}
                   </td>
                   <td className="px-6 py-4">{vehicle.name}</td>
-                  <td className="px-6 py-4">${vehicle.rate.toFixed(2)}</td>
+                  <td className="px-6 py-4">Rs. {vehicle.rate.toFixed(2)}</td>
                   <td className="px-6 py-4">
                     <span
                       className={`px-2 py-1 rounded text-xs font-semibold ${
