@@ -28,6 +28,7 @@ model Vehicle {
   rate      Float
   status    String     
   image     String?
+  adjustedRate Float?
   bookings  Booking[]  
 }
 

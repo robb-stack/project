@@ -43,7 +43,7 @@ const Cars = () => {
             {booking.vehicle?.name || "Unknown Vehicle"}
           </h2>
           <p>Status: {booking.status}</p>
-          <p>Rate: ${booking.vehicle?.rate?.toFixed(2) || "N/A"}</p>
+          <p>Rate: Rs. {booking.vehicle?.adjustedRate?.toFixed(2) || "N/A"}</p>
           {booking.vehicle?.image && (
             <img
               src={`http://localhost:8000/uploads/${booking.vehicle.image}`}

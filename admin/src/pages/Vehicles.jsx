@@ -26,13 +26,11 @@ const Vehicles = () => {
     }
   };
 
-  // DELETE vehicle handler
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this vehicle?")) return;
 
     try {
       await axios.delete(`http://localhost:8000/vehicle/${id}`);
-      // Remove deleted vehicle from state
       setVehicles((prev) => prev.filter((v) => v.id !== id));
     } catch (err) {
       alert("Failed to delete vehicle.");
@@ -67,8 +65,9 @@ const Vehicles = () => {
                 <th className="px-6 py-3">Image</th>
                 <th className="px-6 py-3">Name</th>
                 <th className="px-6 py-3">Rate / Hour</th>
+                <th className="px-6 py-3">Adjusted Rate / Hour</th>
                 <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3">Actions</th> {/* New column */}
+                <th className="px-6 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -88,7 +87,14 @@ const Vehicles = () => {
                     )}
                   </td>
                   <td className="px-6 py-4">{vehicle.name}</td>
-                  <td className="px-6 py-4">Rs. {vehicle.rate.toFixed(2)}</td>
+                  <td className="px-6 py-4">Rs. {vehicle.rate?.toFixed(2)}</td>
+                  <td className="px-6 py-4">
+                    {vehicle.adjustedRate !== null && vehicle.adjustedRate !== undefined ? (
+                      <span>Rs. {vehicle.adjustedRate.toFixed(2)}</span>
+                    ) : (
+                      <span className="text-gray-400">-</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4">
                     <span
                       className={`px-2 py-1 rounded text-xs font-semibold ${

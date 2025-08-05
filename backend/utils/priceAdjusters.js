@@ -21,25 +21,26 @@ const adjustVehiclePrices = async () => {
   const vehicles = await prisma.vehicle.findMany();
 
   for (const vehicle of vehicles) {
-    let newRate = vehicle.rate;
+    // Always calculate from original 'rate'
+    let adjustedRate = vehicle.rate;
 
     if (activeUserCount >= ACTIVE_USER_THRESHOLD) {
-      newRate = vehicle.rate * (1 + PRICE_CHANGE_PERCENT); 
+      adjustedRate = vehicle.rate * (1 + PRICE_CHANGE_PERCENT); 
     } else {
-      newRate = vehicle.rate * (1 - PRICE_CHANGE_PERCENT); 
+      adjustedRate = vehicle.rate * (1 - PRICE_CHANGE_PERCENT); 
     }
 
-    newRate = Math.round(newRate * 100) / 100;
+    adjustedRate = Math.round(adjustedRate * 100) / 100;
 
-    if (newRate !== vehicle.rate) {
+    if (adjustedRate !== vehicle.adjustedRate) {
       await prisma.vehicle.update({
         where: { id: vehicle.id },
-        data: { rate: newRate },
+        data: { adjustedRate },
       });
     }
   }
 
-  console.log(`Prices adjusted. Active users in last 12h: ${activeUserCount}`);
+  console.log(`Adjusted vehicle prices based on ${activeUserCount} active users.`);
 };
 
 module.exports = adjustVehiclePrices;

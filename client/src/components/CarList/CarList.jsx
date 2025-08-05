@@ -33,7 +33,6 @@ const CarList = () => {
       });
 
       alert("Booking request sent! Await confirmation.");
-      // Refresh bookings
       const res = await axios.get(`http://localhost:8000/booking/user/${user.id}`);
       setUserBookings(res.data.data);
     } catch (err) {
@@ -74,7 +73,7 @@ const CarList = () => {
               <div className="space-y-2">
                 <h1 className="text-primary font-semibold">{car.name}</h1>
                 <div className="flex justify-between items-center text-xl font-semibold">
-                  <p>Rs{car.rate}/Day</p>
+                  <p>Rs. {car.adjustedRate}/Day</p>
                   {isBooked(car.id) ? (
                     <span className="text-gray-500 text-sm">Booked</span>
                   ) : (
