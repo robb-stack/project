@@ -114,7 +114,9 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-
+    const userId = parseInt(id);
+    await prisma.booking.deleteMany({ where: { userId } });
+    await prisma.userActivity.deleteMany({ where: { userId } });
     await prisma.user.delete({
       where: { id: parseInt(id) },
     });
