@@ -4,6 +4,11 @@ import axios from "axios";
 const CarList = () => {
   const [vehicles, setVehicles] = useState([]);
   const [userBookings, setUserBookings] = useState([]);
+  const [selectedVehicle, setSelectedVehicle] = useState(null); // for payment
+  const [days, setDays] = useState(1);
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -19,22 +24,37 @@ const CarList = () => {
     }
   }, []);
 
-  const handleBookNow = async (vehicleId) => {
+  const handleBookNowClick = (vehicle) => {
+    setSelectedVehicle(vehicle);
+  };
+
+  const onSubmitPayment = async () => {
     if (!user) {
       alert("Please log in to book a vehicle.");
+      return;
+    }
+
+    if (!cardNumber || !expiry || !cvv || days <= 0) {
+      alert("Please fill all payment details correctly.");
       return;
     }
 
     try {
       await axios.post("http://localhost:8000/booking", {
         userId: user.id,
-        vehicleId,
+        vehicleId: selectedVehicle.id,
         status: "pending",
+        days: days,
       });
 
-      alert("Booking request sent! Await confirmation.");
+      alert("Payment successful! Booking request sent. Await confirmation.");
       const res = await axios.get(`http://localhost:8000/booking/user/${user.id}`);
       setUserBookings(res.data.data);
+      setSelectedVehicle(null);
+      setCardNumber("");
+      setExpiry("");
+      setCvv("");
+      setDays(1);
     } catch (err) {
       alert("Booking failed. You may have already booked this vehicle.");
       console.error(err);
@@ -48,10 +68,10 @@ const CarList = () => {
   return (
     <div className="pb-24">
       <div className="container">
-        <h1 className="text-3xl sm:text-4xl font-semibold font-serif mb-3" data-aos="fade-up">
+        <h1 className="text-3xl sm:text-4xl font-semibold font-serif mb-3">
           Book Your Ride Now
         </h1>
-        <p className="text-sm pb-10" data-aos="fade-up" data-aos-delay="400">
+        <p className="text-sm pb-10">
           Choose your car, pick your dates, and hit the road – it’s that easy.
         </p>
 
@@ -60,8 +80,6 @@ const CarList = () => {
             <div
               key={car.id}
               className="space-y-3 border-2 border-gray-300 hover:border-primary p-3 rounded-xl relative group"
-              data-aos="fade-up"
-              data-aos-delay={index * 300}
             >
               <div className="w-full h-[120px]">
                 <img
@@ -78,7 +96,7 @@ const CarList = () => {
                     <span className="text-gray-500 text-sm">Booked</span>
                   ) : (
                     <button
-                      onClick={() => handleBookNow(car.id)}
+                      onClick={() => handleBookNowClick(car)}
                       className="text-sm px-3 py-1 bg-primary text-white rounded hover:bg-primary-dark"
                     >
                       Book Now
@@ -93,11 +111,84 @@ const CarList = () => {
           ))}
         </div>
 
-        <div className="grid place-items-center mt-8">
-          <button className="button-outline" data-aos="fade-up">
-            Get Started
-          </button>
-        </div>
+        {selectedVehicle && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[350px]">
+              <h2 className="text-lg font-bold mb-4">
+                Payment for {selectedVehicle.name}
+              </h2>
+
+              <div className="mb-3">
+                <label className="block text-sm font-medium mb-1">
+                  Card Number
+                </label>
+                <input
+                  type="text"
+                  placeholder="1234 5678 9012 3456"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                  className="border w-full px-3 py-2 rounded"
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="block text-sm font-medium mb-1">
+                  Expiry Date
+                </label>
+                <input
+                  type="text"
+                  placeholder="MM/YY"
+                  value={expiry}
+                  onChange={(e) => setExpiry(e.target.value)}
+                  className="border w-full px-3 py-2 rounded"
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="block text-sm font-medium mb-1">
+                  CVV
+                </label>
+                <input
+                  type="password"
+                  placeholder="123"
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value)}
+                  className="border w-full px-3 py-2 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  Number of Days
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter number of days"
+                  value={days}
+                  min={1}
+                  onChange={(e) => setDays(e.target.value)}
+                  className="border w-full px-3 py-2 rounded"
+                />
+              </div>
+
+              <div className="flex justify-between">
+                <button
+                  onClick={() => setSelectedVehicle(null)}
+                  className="px-4 py-2 bg-gray-400 text-white rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={onSubmitPayment}
+                  className="px-4 py-2 bg-primary text-white rounded"
+                >
+                  Pay & Book
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
